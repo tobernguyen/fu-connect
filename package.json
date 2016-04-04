@@ -1,0 +1,38 @@
+{
+  "name": "fu-connect",
+  "version": "0.1.0",
+  "description": "Auto connect to dormitory network for FPT University Student!",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack -d --progress --colors --watch",
+    "build": "rm -rf dist/unpacked/stop-scrolling.js.map && webpack -p && (cd dist/unpacked && zip -r ../build/FU-Connect.zip .)",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "fu",
+    "hoa lac",
+    "fpt university",
+    "connect",
+    "dormitory",
+    "network"
+  ],
+  "author": "Long Nguyen",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "^5.8.25",
+    "babel-loader": "^5.3.2",
+    "bootstrap": "^3.3.6",
+    "css-loader": "^0.23.1",
+    "file-loader": "^0.8.5",
+    "jquery": "^2.1.4",
+    "node-sass": "^3.4.2",
+    "react": "^0.14.8",
+    "react-bootstrap": "^0.28.5",
+    "react-dom": "^0.14.8",
+    "react-tap-event-plugin": "^0.2.2",
+    "sass-loader": "^3.2.0",
+    "style-loader": "^0.13.1",
+    "url-loader": "^0.5.7",
+    "webpack": "^1.12.14"
+  }
+}
