@@ -1,0 +1,34 @@
+{
+  "name": "FU Connect",
+  "version": "0.1.0",
+  "description": "Auto connect to dormitory network for FPT University Student!",
+  "manifest_version": 2,
+  "icons": { 
+              "16": "icon16.png",
+              "48": "icon48.png",
+              "128": "icon128.png" 
+            },
+  "browser_action": {
+   "default_icon": "icon16.png",
+   "default_title": ""
+  },
+  "options_page": "options.html",
+  "permissions": [
+        "storage"
+    ],
+  "background": {
+    "scripts": ["event_page.js"],
+    "persistent": false
+  },
+  "permissions": [
+    "tabs"
+  ]
+  // "content_scripts": [
+  //   {
+  //     "matches": ["http://www.facebook.com/*", "https://www.facebook.com/*"],
+  //     "js": ["stop-scrolling.js"],
+  //     "css": ["stop-scrolling.css"],
+  //     "run_at": "document_idle"
+  //   }
+  // ]
+}
