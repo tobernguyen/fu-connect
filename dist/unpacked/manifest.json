@@ -21,14 +21,9 @@
     "persistent": false
   },
   "permissions": [
-    "tabs"
+    "tabs",
+    "storage",
+    "http://*/",
+    "https://*/"
   ]
-  // "content_scripts": [
-  //   {
-  //     "matches": ["http://www.facebook.com/*", "https://www.facebook.com/*"],
-  //     "js": ["stop-scrolling.js"],
-  //     "css": ["stop-scrolling.css"],
-  //     "run_at": "document_idle"
-  //   }
-  // ]
 }

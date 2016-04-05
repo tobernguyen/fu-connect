@@ -9,3 +9,4 @@ dist/unpacked/*.ttf
 dist/unpacked/*.woff
 dist/unpacked/*.eot
 dist/unpacked/*.css
+npm-debug.log

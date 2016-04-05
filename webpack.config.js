@@ -28,7 +28,12 @@ module.exports = {
             {
               test: /\.scss$/,
               loaders: ["style", "css", "sass"]
-            }
+            },
+            {
+              test: /\.(png|jpg|gif)$/,
+              loader: 'url-loader?limit=10000&name=img/img-[hash:6].[ext]'
+            },
+            { test: require.resolve('jquery'), loader: 'expose?$' }
         ]
     }
 };
