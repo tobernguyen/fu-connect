@@ -13,28 +13,34 @@ class ContentCenter extends React.Component {
     super(props);
 
     this.state = {
-      failReason: null,
-      passedStates: [],
-      currentState: NETWORK_STATUS.CHECKING
+      actions: [],
+      actionStatuses: [],
+      accountId: ''
     }
     this.onUp = this.onUp.bind(this);
     this.onDown = this.onDown.bind(this);
-    this.changeToState = this.changeToState.bind(this);
-    this.getStepText = this.getStepText.bind(this);
+    this.pushAction = this.pushAction.bind(this);
+    this.pushActionStatus = this.pushActionStatus.bind(this);
+    this.changeLastActionStatus = this.changeLastActionStatus.bind(this);
+    this.getActionForNwSt = this.getActionForNwSt.bind(this);
   }
 
   componentDidMount() {
+    this.pushAction("Check network connectivity");
     checkNetworkStatus(this.onUp, this.onDown)
   }
 
   onUp() {
-    this.changeToState(NETWORK_STATUS.INTERNET_READY);
+    this.pushActionStatus("Done");
+    this.pushAction("Internet ready!");
+    this.pushActionStatus("");
   }
 
   onDown(networkStatus) {
+    this.pushActionStatus("Done");
+
     // Try login into Dormitory network if detect FU Dorm network
     if (networkStatus === NETWORK_STATUS.FU_NETWORK_NOT_LOGGED_IN) {
-      this.changeToState(NETWORK_STATUS.FU_NETWORK_CONNECTING);
       let username, password;
       chrome.storage.sync.get(["username", "password"], (items) => {
         username = items.username;
@@ -45,60 +51,48 @@ class ContentCenter extends React.Component {
           window.location = chrome.extension.getURL("options.html");
         } else {
           this.setState({accountId: username});
+          this.pushAction(this.getActionForNwSt(NETWORK_STATUS.FU_NETWORK_CONNECTING));
 
           LoginWithInfo(username, password).then(() => {
+            this.pushActionStatus("Done");
+            this.pushAction("Re-checking network connectivity");
             checkNetworkStatus(this.onUp, this.onDown);
           }, (failReason) => {
-            this.setState({failReason: failReason});
-            this.changeToState(NETWORK_STATUS.FU_NETWORK_LOGIN_FAILED);
+            this.pushActionStatus(failReason);
           });
         }
       });
+    } else {
+      this.pushAction(this.getActionForNwSt(networkStatus));
+      this.pushActionStatus("");
     }
   }
 
-  changeToState(nextState) {
-    let currentState, passedStatesToPush;
-
-    if (
-      nextState === NETWORK_STATUS.FU_NETWORK_LOGIN_FAILED ||
-      nextState === NETWORK_STATUS.INTERNET_READY
-    ) {
-      currentState = null;
-      passedStatesToPush = [this.state.currentState, nextState];
-    } else {
-      currentState = nextState;
-      passedStatesToPush =  [this.state.currentState];
-    }
-
+  pushAction(actionName) {
     this.setState({
-      passedStates: update(this.state.passedStates, {$push: passedStatesToPush}),
-      currentState: currentState
+      actions: update(this.state.actions, {$push: [actionName]})
     });
+  }
+
+  pushActionStatus(actionStatus) {
+    this.setState({
+      actionStatuses: update(this.state.actionStatuses, {$push: [actionStatus]})
+    });
+  }
+
+  changeLastActionStatus(actionStatus) {
+
   }
 
   render() {
-    let informationText
-    let connectionTableRows = this.state.passedStates.map((passedState, index) => {
-      let informationText = this.getStepText(passedState),
-          statusElement = "Done";
-
-      if (passedState === NETWORK_STATUS.FU_NETWORK_LOGIN_FAILED) {
-        statusElement = this.state.failReason;
-      }
+    let connectionTableRows = this.state.actions.map((action, index) => {
+      let actionStatus = this.state.actionStatuses[index] !== undefined ? this.state.actionStatuses[index] : '...';
 
       return <tr key={index}>
-        <td>{informationText}</td>
-        <td>{statusElement}</td>
+        <td>{action}</td>
+        <td>{actionStatus}</td>
       </tr>
     });
-
-    if (this.state.currentState) {
-      connectionTableRows[connectionTableRows.length] = <tr>
-        <td>{this.getStepText(this.state.currentState)}</td>
-        <td>...</td>
-      </tr>
-    }
 
     return <div>
       <Table className="login-process">
@@ -109,7 +103,7 @@ class ContentCenter extends React.Component {
     </div>
   }
 
-  getStepText(networkStatus) {
+  getActionForNwSt(networkStatus) {
     let result;
     switch(networkStatus) {
       case NETWORK_STATUS.CHECKING:
@@ -122,13 +116,16 @@ class ContentCenter extends React.Component {
         result = `Login with account ${this.state.accountId}`;
         break;
       case NETWORK_STATUS.NETWORK_PROBLEM:
-        result = "Please check your network connection";
+        result = "=> Error: Please check your network connection";
         break;
       case NETWORK_STATUS.INTERNET_READY:
         result = "Internet Ready!";
         break;
       case NETWORK_STATUS.FU_NETWORK_LOGIN_FAILED:
         result = "Login failed";
+        break;
+      case NETWORK_STATUS.FU_NETWORK_LOGGED_IN_NO_INTERNET:
+        result = "Logged in but no Internet access";
         break;
     }
 
@@ -150,7 +147,10 @@ class App extends React.Component {
             </Col>
             <Col md={5}>
               <ContentCenter/>
-              <div className="option-links pull-right"><a href={chrome.extension.getURL("options.html")}>Change Internet Account</a></div>
+              <div className="option-links pull-right">
+                <a href='#' className='retry' onClick={() => {location.reload()}}>Retry</a>
+                <a href={chrome.extension.getURL("options.html")}>Change Internet Account</a>
+              </div>
             </Col>
             <Col md={4}>
             </Col>

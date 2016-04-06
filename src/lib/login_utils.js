@@ -4,7 +4,7 @@ const LOGIN_PAGE_TEXT = "FPT Telecom";
 
 export const FAIL_PATTERN = {
   WRONG_PASSWORD: "Khong dung mat khau",
-  ACCOUNT_NOT_AVAILABLE: "khong ton tai",
+  ACCOUNT_NOT_AVAILABLE: "Tai khoan khong ton tai",
   PC_LIMIT: "vuot qua gioi han",
   ACCOUNT_EXPIRED: "het han",
   TRY_AGAIN_IN_20_SEC: "Quy khach vui long thu lai sau 20s",
@@ -43,7 +43,6 @@ export function LoginWithInfo(username, password) {
     return $.post( "http://192.168.100.2:8000/", $loginForm.serialize()+"&accept=.");
   }).then((data, textStatus, request) => {
     if (~data.indexOf(LOGIN_PAGE_TEXT)) {
-      debugger
       var failReason = getFailReason(data);
       console.log("Login Failed");
       console.log("Fail reason: %s", failReason);

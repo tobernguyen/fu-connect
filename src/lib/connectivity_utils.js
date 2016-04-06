@@ -6,7 +6,8 @@ export const NETWORK_STATUS = {
   FU_NETWORK_NOT_LOGGED_IN: 1,
   FU_NETWORK_CONNECTING: 2,
   FU_NETWORK_LOGIN_FAILED: 3,
-  INTERNET_READY: 4
+  INTERNET_READY: 4,
+  FU_NETWORK_LOGGED_IN_NO_INTERNET: 5
 };
 
 export function checkNetworkStatus(onUp, onDown) {
