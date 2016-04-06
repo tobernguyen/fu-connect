@@ -31,7 +31,7 @@ module.exports = {
             },
             {
               test: /\.(png|jpg|gif)$/,
-              loader: 'url-loader?limit=10000&name=img/img-[hash:6].[ext]'
+              loader: 'url-loader'
             },
             { test: require.resolve('jquery'), loader: 'expose?$' }
         ]
