@@ -4,6 +4,7 @@
 
 .header {
   margin-top: 20px;
+  margin-bottom: 60px;
 
   img {
     margin: 0 auto;
@@ -26,3 +27,9 @@ table.login-process > tbody > tr > td{
 a.retry {
   margin-right: 10px;
 }
+
+.center-div{
+  margin: 0 auto;
+  width:80% /* value of your choice which suits your alignment */
+}
+
