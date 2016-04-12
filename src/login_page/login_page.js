@@ -98,7 +98,7 @@ class ContentCenter extends React.Component {
 
       return <tr key={index}>
         <td>{action}</td>
-        <td>{actionStatus}</td>
+        <td style={{textAlign: "right"}}>{actionStatus}</td>
       </tr>
     });
 
@@ -145,7 +145,7 @@ class App extends React.Component {
   render() {
     return <div>
       <div className="header">
-        <a href="#"><img src={require('../assets/images/logo.png')} width="200px" className="img-responsive"/></a>
+        <a href="#"><img src={require('../assets/images/logo.png')} className="img-responsive"/></a>
       </div>
 
       <div className="main-content">
