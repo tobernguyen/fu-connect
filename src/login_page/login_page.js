@@ -7,6 +7,13 @@ import './login_page.scss';
 import { Grid, Row, Col, Table } from 'react-bootstrap';
 import { FAIL_STATUS, LoginWithInfo } from '../lib/login_utils';
 import { NETWORK_STATUS, checkNetworkStatus } from '../lib/connectivity_utils';
+import Spinner from '../loader';
+
+class DoneComponent extends React.Component {
+  render() {
+    return <img src={require("../assets/images/done.png")} height="39px" style={{padding: "8px"}}/>
+  }
+}
 
 class ContentCenter extends React.Component {
   constructor(props) {
@@ -31,13 +38,13 @@ class ContentCenter extends React.Component {
   }
 
   onUp() {
-    this.pushActionStatus("Done");
+    this.pushActionStatus(<DoneComponent/>);
     this.pushAction("Internet ready!");
     this.pushActionStatus("");
   }
 
   onDown(networkStatus) {
-    this.pushActionStatus("Done");
+    this.pushActionStatus(<DoneComponent/>);
 
     // Try login into Dormitory network if detect FU Dorm network
     if (networkStatus === NETWORK_STATUS.FU_NETWORK_NOT_LOGGED_IN) {
@@ -54,9 +61,9 @@ class ContentCenter extends React.Component {
           this.pushAction(this.getActionForNwSt(NETWORK_STATUS.FU_NETWORK_CONNECTING));
 
           LoginWithInfo(username, password).then(() => {
-            this.pushActionStatus("Done");
-            this.pushAction("Re-checking network connectivity");
-            checkNetworkStatus(this.onUp, this.onDown);
+            this.pushActionStatus(<DoneComponent/>);
+            // this.pushAction("Re-checking network connectivity");
+            // checkNetworkStatus(this.onUp, this.onDown);
           }, (failReason) => {
             this.pushActionStatus(failReason);
           });
@@ -86,7 +93,8 @@ class ContentCenter extends React.Component {
 
   render() {
     let connectionTableRows = this.state.actions.map((action, index) => {
-      let actionStatus = this.state.actionStatuses[index] !== undefined ? this.state.actionStatuses[index] : '...';
+      let actionStatus = this.state.actionStatuses[index] !== undefined ? this.state.actionStatuses[index] : <Spinner/>;
+      // actionStatus = <Spinner/>;
 
       return <tr key={index}>
         <td>{action}</td>
