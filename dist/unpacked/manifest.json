@@ -17,13 +17,12 @@
         "storage"
     ],
   "background": {
-    "scripts": ["event_page.js"],
-    "persistent": false
+    "scripts": ["event_page.js"]
   },
   "permissions": [
     "tabs",
     "storage",
-    "http://*/",
-    "https://*/"
+    "http://*/*", 
+    "https://*/*"
   ]
 }

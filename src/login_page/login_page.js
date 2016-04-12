@@ -49,7 +49,7 @@ class ContentCenter extends React.Component {
     // Try login into Dormitory network if detect FU Dorm network
     if (networkStatus === NETWORK_STATUS.FU_NETWORK_NOT_LOGGED_IN) {
       let username, password;
-      chrome.storage.sync.get(["username", "password"], (items) => {
+      chrome.storage.local.get(["username", "password"], (items) => {
         username = items.username;
         password = items.password;
 
