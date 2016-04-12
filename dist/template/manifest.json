@@ -17,7 +17,7 @@
         "storage"
     ],
   "background": {
-    "scripts": ["event_page.js"]
+    "scripts": ["background.js"]
   },
   "permissions": [
     "tabs",
