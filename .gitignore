@@ -1,12 +1,5 @@
 node_modules
 .DS_Store
-dist/build/*.zip
-dist/unpacked/*.js
-dist/unpacked/*.js.map
-dist/unpacked/*.woff2
-dist/unpacked/*.svg
-dist/unpacked/*.ttf
-dist/unpacked/*.woff
-dist/unpacked/*.eot
-dist/unpacked/*.css
+dist/build/
+dist/unpacked/
 npm-debug.log
