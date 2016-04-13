@@ -5,13 +5,18 @@ import update from 'react-addons-update';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './login_page.scss';
 import { Grid, Row, Col, Table } from 'react-bootstrap';
-import { FAIL_STATUS, LoginWithInfo } from '../lib/login_utils';
+import { FAIL_PATTERN, LoginWithInfo } from '../lib/login_utils';
 import { NETWORK_STATUS, checkNetworkStatus } from '../lib/connectivity_utils';
-import Spinner from '../loader';
 
 class DoneComponent extends React.Component {
   render() {
-    return <img src={require("../assets/images/done.png")} height="39px" style={{padding: "8px"}}/>
+    return <img src={require("../assets/images/done.png")} height="20px"/>
+  }
+}
+
+class Spinner extends React.Component {
+  render() {
+    return <img src={require("../assets/images/spinner.svg")} height="20px"/>
   }
 }
 
