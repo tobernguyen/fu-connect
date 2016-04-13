@@ -73,7 +73,7 @@ class OptionPage extends React.Component {
       </div>
 
       <div className="footer">
-        Copyright Connect Team © 2016
+        Copyright Connect Team (c) 2016
       </div>
     </div>
   }
