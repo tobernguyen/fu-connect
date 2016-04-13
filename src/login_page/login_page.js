@@ -33,9 +33,9 @@ class ContentCenter extends React.Component {
     this.onDown = this.onDown.bind(this);
     this.pushAction = this.pushAction.bind(this);
     this.pushActionStatus = this.pushActionStatus.bind(this);
-    this.changeLastActionStatus = this.changeLastActionStatus.bind(this);
     this.getActionForNwSt = this.getActionForNwSt.bind(this);
     this.retryInSecond = this.retryInSecond.bind(this);
+    this.closeInSecond = this.closeInSecond.bind(this);
   }
 
   componentDidMount() {
@@ -47,6 +47,7 @@ class ContentCenter extends React.Component {
     this.pushActionStatus(<DoneComponent/>);
     this.pushAction("Internet ready!");
     this.pushActionStatus("");
+    this.closeInSecond(5);
   }
 
   onDown(networkStatus) {
@@ -100,14 +101,9 @@ class ContentCenter extends React.Component {
     });
   }
 
-  changeLastActionStatus(actionStatus) {
-
-  }
-
   render() {
     let connectionTableRows = this.state.actions.map((action, index) => {
       let actionStatus = this.state.actionStatuses[index] !== undefined ? this.state.actionStatuses[index] : <Spinner/>;
-      // actionStatus = <Spinner/>;
 
       return <tr key={index}>
         <td>{action}</td>
@@ -123,6 +119,9 @@ class ContentCenter extends React.Component {
           {connectionTableRows}
         </tbody>
       </Table>
+      <div className="auto-close-inform pull-left">
+        {this.state.closeInSecond ? `Auto close in ${this.state.closeInSecond} seconds.` : ""}
+      </div>
       <div className="option-links pull-right">
         <a href='#' className='retry' onClick={() => {location.reload()}}>{retryLinkText}</a>
         <a href={chrome.extension.getURL("options.html")}>Change Internet Account</a>
@@ -164,6 +163,14 @@ class ContentCenter extends React.Component {
     setTimeout(() => {location.reload()}, seconds * 1000);
     setInterval(() => {
       this.setState({retryInSeconds: this.state.retryInSeconds - 1})
+    }, 1000);
+  }
+
+  closeInSecond(seconds) {
+    this.setState({closeInSecond: seconds});
+    setTimeout(() => {window.close()}, seconds * 1000);
+    setInterval(() => {
+      this.setState({closeInSecond: this.state.closeInSecond - 1})
     }, 1000);
   }
 }
