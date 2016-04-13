@@ -31,7 +31,7 @@ export function LoginWithInfo(username, password) {
   var dfd = $.Deferred();
 
   $.ajax({
-    url: "http://192.168.100.2:8000/"
+    url: "http://210.245.14.84/"
   }).then((data) => {
     var loginPage = data;
     var regex = /(<form[^]*<\/form>)/;

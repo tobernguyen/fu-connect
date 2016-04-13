@@ -30,6 +30,7 @@ class ContentCenter extends React.Component {
     this.pushActionStatus = this.pushActionStatus.bind(this);
     this.changeLastActionStatus = this.changeLastActionStatus.bind(this);
     this.getActionForNwSt = this.getActionForNwSt.bind(this);
+    this.retryInSecond = this.retryInSecond.bind(this);
   }
 
   componentDidMount() {
@@ -48,6 +49,9 @@ class ContentCenter extends React.Component {
 
     // Try login into Dormitory network if detect FU Dorm network
     if (networkStatus === NETWORK_STATUS.FU_NETWORK_NOT_LOGGED_IN) {
+      this.pushAction(this.getActionForNwSt(networkStatus));
+      this.pushActionStatus(<DoneComponent />);
+
       let username, password;
       chrome.storage.local.get(["username", "password"], (items) => {
         username = items.username;
@@ -66,12 +70,16 @@ class ContentCenter extends React.Component {
             // checkNetworkStatus(this.onUp, this.onDown);
           }, (failReason) => {
             this.pushActionStatus(failReason);
+            if (failReason === FAIL_PATTERN.TRY_AGAIN_IN_20_SEC) {
+              this.retryInSecond(21);
+            }
           });
         }
       });
     } else {
       this.pushAction(this.getActionForNwSt(networkStatus));
       this.pushActionStatus("");
+      this.retryInSecond(5);
     }
   }
 
@@ -102,12 +110,18 @@ class ContentCenter extends React.Component {
       </tr>
     });
 
+    let retryLinkText = "Retry" + (this.state.retryInSeconds ? `(${this.state.retryInSeconds})` : "");
+
     return <div>
       <Table className="login-process">
         <tbody>
           {connectionTableRows}
         </tbody>
       </Table>
+      <div className="option-links pull-right">
+        <a href='#' className='retry' onClick={() => {location.reload()}}>{retryLinkText}</a>
+        <a href={chrome.extension.getURL("options.html")}>Change Internet Account</a>
+      </div>
     </div>
   }
 
@@ -139,6 +153,14 @@ class ContentCenter extends React.Component {
 
     return result;
   }
+
+  retryInSecond(seconds) {
+    this.setState({retryInSeconds: seconds});
+    setTimeout(() => {location.reload()}, seconds * 1000);
+    setInterval(() => {
+      this.setState({retryInSeconds: this.state.retryInSeconds - 1})
+    }, 1000);
+  }
 }
 
 class App extends React.Component {
@@ -155,10 +177,6 @@ class App extends React.Component {
             </Col>
             <Col md={5}>
               <ContentCenter/>
-              <div className="option-links pull-right">
-                <a href='#' className='retry' onClick={() => {location.reload()}}>Retry</a>
-                <a href={chrome.extension.getURL("options.html")}>Change Internet Account</a>
-              </div>
             </Col>
             <Col md={4}>
             </Col>
