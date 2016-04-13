@@ -40,7 +40,7 @@ class ContentCenter extends React.Component {
 
   componentDidMount() {
     this.pushAction("Check network connectivity");
-    checkNetworkStatus(this.onUp, this.onDown)
+    checkNetworkStatus(this.onUp, this.onDown);
   }
 
   onUp() {

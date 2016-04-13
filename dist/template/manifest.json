@@ -20,6 +20,7 @@
     "scripts": ["background.js"]
   },
   "permissions": [
+    "webRequest",
     "tabs",
     "storage",
     "http://*/*", 

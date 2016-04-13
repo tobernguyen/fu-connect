@@ -8,7 +8,7 @@ export const FAIL_PATTERN = {
   PC_LIMIT: "vuot qua gioi han",
   ACCOUNT_EXPIRED: "het han",
   TRY_AGAIN_IN_20_SEC: "Quy khach vui long thu lai sau 20s",
-  UNKNOWN: "unknown",
+  UNKNOWN: "unknown"
 }
 
 const getFailReason = function(response) {
@@ -28,10 +28,21 @@ const getFailReason = function(response) {
 }
 
 export function LoginWithInfo(username, password) {
+  let loginUrl;
+  let onBeforeRedirectListener = (details) => {
+    loginUrl = details.redirectUrl
+    console.log(loginUrl);
+
+    chrome.webRequest.onBeforeRedirect.removeListener(onBeforeRedirectListener);
+  }
+
+  chrome.webRequest.onBeforeRedirect.addListener(onBeforeRedirectListener, {urls: ["http://210.245.14.84/*"]});
+
   var dfd = $.Deferred();
 
   $.ajax({
-    url: "http://210.245.14.84/"
+    url: `http://210.245.14.84/robots.txt?_=${(new Date()).getTime()}`,
+    timeout: 10000
   }).then((data) => {
     var loginPage = data;
     var regex = /(<form[^]*<\/form>)/;
@@ -40,7 +51,7 @@ export function LoginWithInfo(username, password) {
     $loginForm.find("input[name='auth_user']").val(username);
     $loginForm.find("input[name='auth_pass']").val(password);
     $loginForm.find("input[name='redirurl']").val("https://www.google.com/")
-    return $.post( "http://192.168.100.2:8000/", $loginForm.serialize()+"&accept=.");
+    return $.post(loginUrl, $loginForm.serialize()+"&accept=.");
   }).then((data, textStatus, request) => {
     if (~data.indexOf(LOGIN_PAGE_TEXT)) {
       var failReason = getFailReason(data);
