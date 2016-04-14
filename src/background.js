@@ -11,15 +11,24 @@ chrome.runtime.onInstalled.addListener(function(details){
         console.log("This is a first install!");
         initializeSettings(() => {chrome.tabs.create({url: "options.html"})});
     }else if(details.reason == "update"){
-        var thisVersion = chrome.runtime.getManifest().version;
-        console.log("Updated from " + details.previousVersion + " to " + thisVersion + "!");
+      // Upgrade to 1.3.0 require new localStorage variable
+      if (details.previousVersion == "1.2.0") {
+        chrome.storage.local.set({
+        "internetAccess": window.fuConnectCheckInternetInterval
+        }, (items) => {
+          console.log("Set internet access to current internet connectivity");
+        });
+      }
+      
+      var thisVersion = chrome.runtime.getManifest().version;
+      console.log("Updated from " + details.previousVersion + " to " + thisVersion + "!");
     }
 });
 
-chrome.browserAction.onClicked.addListener(function(activeTab)
-{
-  chrome.tabs.create({ url: "login_page.html" });
-});
+// chrome.browserAction.onClicked.addListener(function(activeTab)
+// {
+//   chrome.tabs.create({ url: "login_page.html" });
+// });
 
 chrome.storage.local.get(["autoRelogin", "monitorNetwork"], (items) => {
   if(items.monitorNetwork) {
@@ -64,6 +73,7 @@ const onUp = () => {
   if (!window.fuConnectIsInternetAvailable) {
     window.fuConnectIsInternetAvailable = true;
     updateBrowserAction();
+    updateInternetAccessStatus();
   }
 }
 
@@ -73,6 +83,7 @@ const onDown = () => {
     if (window.autoRelogin) chrome.tabs.create({url: "login_page.html"});
     window.fuConnectIsInternetAvailable = false;
     updateBrowserAction();
+    updateInternetAccessStatus();
   }
 }
 
@@ -84,5 +95,13 @@ const updateBrowserAction = () => {
           "48": `icon_${iconTag}48.png`,
           "128": `icon_${iconTag}128.png`
       }
+  });
+}
+
+function updateInternetAccessStatus() {
+  chrome.storage.local.set({
+    "internetAccess": window.fuConnectIsInternetAvailable
+  }, (items) => {
+    console.log("Updated internet access status");
   });
 }

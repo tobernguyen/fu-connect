@@ -3,7 +3,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Input, ButtonInput, Row, Col } from 'react-bootstrap';
 import { Notification } from 'react-notification';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import './login_page/login_page.scss';
 
 class OptionPage extends React.Component {

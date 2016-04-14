@@ -1,6 +1,6 @@
 {
   "name": "FU Connect",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Auto connect to dormitory network for FPT University Student!",
   "manifest_version": 2,
   "icons": { 
@@ -10,7 +10,8 @@
             },
   "browser_action": {
    "default_icon": "icon48.png",
-   "default_title": ""
+   "default_title": "FU Connect",
+   "default_popup": "popup.html"
   },
   "options_page": "options.html",
   "permissions": [

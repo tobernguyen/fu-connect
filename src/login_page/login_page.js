@@ -2,7 +2,6 @@ import $ from 'jquery';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import update from 'react-addons-update';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import './login_page.scss';
 import { Grid, Row, Col, Table } from 'react-bootstrap';
 import { FAIL_PATTERN, LoginWithInfo } from '../lib/login_utils';
@@ -72,8 +71,7 @@ class ContentCenter extends React.Component {
 
           LoginWithInfo(username, password).then(() => {
             this.pushActionStatus(<DoneComponent/>);
-            // this.pushAction("Re-checking network connectivity");
-            // checkNetworkStatus(this.onUp, this.onDown);
+            this.closeInSecond(5);
           }, (failReason) => {
             this.pushActionStatus(failReason);
             if (failReason === FAIL_PATTERN.TRY_AGAIN_IN_20_SEC) {

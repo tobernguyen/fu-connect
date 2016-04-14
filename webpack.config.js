@@ -13,7 +13,8 @@ var common = {
       options: "./src/options.js",
       login_page: "./src/login_page/login_page.js",
       content_script: "./src/content_script.js",
-      background: "./src/background.js"
+      background: "./src/background.js",
+      popup: "./src/popup/popup.js"
   },
   output: {
       path: __dirname + "/dist/unpacked/",
