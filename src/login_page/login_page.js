@@ -6,6 +6,7 @@ import './login_page.scss';
 import { Grid, Row, Col, Table } from 'react-bootstrap';
 import { FAIL_PATTERN, LoginWithInfo } from '../lib/login_utils';
 import { NETWORK_STATUS, checkNetworkStatus } from '../lib/connectivity_utils';
+import AdsWrapper from './ads_wrapper/ads_wrapper';
 
 class DoneComponent extends React.Component {
   render() {
@@ -19,7 +20,7 @@ class Spinner extends React.Component {
   }
 }
 
-class ContentCenter extends React.Component {
+class CoreSystem extends React.Component {
   constructor(props) {
     super(props);
 
@@ -35,6 +36,7 @@ class ContentCenter extends React.Component {
     this.getActionForNwSt = this.getActionForNwSt.bind(this);
     this.retryInSecond = this.retryInSecond.bind(this);
     this.closeInSecond = this.closeInSecond.bind(this);
+    this.retry = this.retry.bind(this);
   }
 
   componentDidMount() {
@@ -42,11 +44,23 @@ class ContentCenter extends React.Component {
     checkNetworkStatus(this.onUp, this.onDown);
   }
 
+  retry() {
+    this.setState({
+      actions: [],
+      actionStatuses: []
+    });
+    setTimeout(() => {
+      this.pushAction("Check network connectivity");
+      checkNetworkStatus(this.onUp, this.onDown);
+    }, 50);
+  }
+
   onUp() {
     this.pushActionStatus(<DoneComponent/>);
     this.pushAction("Internet ready!");
     this.pushActionStatus("");
-    this.closeInSecond(5);
+    this.props.onInternetUp();
+    // this.closeInSecond(10);
   }
 
   onDown(networkStatus) {
@@ -121,7 +135,7 @@ class ContentCenter extends React.Component {
         {this.state.closeInSecond ? `Auto close in ${this.state.closeInSecond} seconds.` : ""}
       </div>
       <div className="option-links pull-right">
-        <a href='#' className='retry' onClick={() => {location.reload()}}>{retryLinkText}</a>
+        <a href='#' className='retry' onClick={this.retry}>{retryLinkText}</a>
         <a href={chrome.extension.getURL("options.html")}>Change Internet Account</a>
       </div>
     </div>
@@ -158,10 +172,13 @@ class ContentCenter extends React.Component {
 
   retryInSecond(seconds) {
     this.setState({retryInSeconds: seconds});
-    setTimeout(() => {location.reload()}, seconds * 1000);
-    setInterval(() => {
+    let retryInterval = setInterval(() => {
       this.setState({retryInSeconds: this.state.retryInSeconds - 1})
     }, 1000);
+    setTimeout(() => {
+      clearInterval(retryInterval);
+      this.retry();
+    }, seconds * 1000);
   }
 
   closeInSecond(seconds) {
@@ -174,21 +191,39 @@ class ContentCenter extends React.Component {
 }
 
 class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      internetUp: false
+    }
+
+    this.handleInternetUp = this.handleInternetUp.bind(this);
+  }
   render() {
     return <div>
       <div className="header">
-        <a href="#"><img src={require('../assets/images/logo.png')} className="img-responsive"/></a>
+        <Grid>
+          <Row>
+            <Col xs={12} sm={12} md={2} className="logo"><a href="#"><img src={require('../assets/images/logo.png')} className="img-responsive"/></a></Col>
+            <Col xs={12} sm={12} md={9} mdOffset={1}>
+              <AdsWrapper imgUrl={require('../assets/images/728x90.png')} linkUrl="https://www.facebook.com/fuconnect/" internetUp={this.state.internetUp} width="729px" height="90px"/>
+            </Col>
+          </Row>
+        </Grid>
       </div>
 
       <div className="main-content">
         <Grid>
           <Row>
-            <Col md={3}>
+            <Col sm={3} md={2}>
+              <AdsWrapper imgUrl={require('../assets/images/160x600.png')} linkUrl="https://www.facebook.com/fuconnect/" internetUp={this.state.internetUp} width="160px" height="600px"/>
             </Col>
-            <Col md={5}>
-              <ContentCenter/>
+            <Col sm={9} md={6}>
+              <CoreSystem onInternetUp={this.handleInternetUp}/>
             </Col>
-            <Col md={4}>
+            <Col xsHidden smHidden md={4}>
+              <AdsWrapper imgUrl={require('../assets/images/300x250.png')} linkUrl="https://www.facebook.com/fuconnect/" internetUp={this.state.internetUp} width="300px" height="250px"/>
             </Col>
           </Row>
         </Grid>
@@ -198,6 +233,10 @@ class App extends React.Component {
         Copyright Connect Team (c) 2016
       </div>
     </div>
+  }
+
+  handleInternetUp() {
+    this.setState({internetUp: true});
   }
 }
 
