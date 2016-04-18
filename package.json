@@ -4,9 +4,9 @@
   "description": "Auto connect to dormitory network for FPT University Student!",
   "main": "index.js",
   "scripts": {
-    "predev": "cd dist && rm -f unpacked/* && cp -Rf template/* unpacked/",
+    "predev": "cd dist && rm -rf unpacked/* && cp -Rf template/* unpacked/",
     "dev": "webpack -d --progress --colors --watch",
-    "prebuild": "cd dist && rm -f build/* && cp -Rf template/* build/",
+    "prebuild": "cd dist && rm -rf build/* && cp -Rf template/* build/",
     "build": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

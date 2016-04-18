@@ -18,7 +18,7 @@ export default class AdsWrapper extends React.Component {
   }
 
 	render() {
-    let wrapperStyle = {cursor: 'pointer', width: this.props.width, height: this.props.height, position: 'relative', 'backgroundColor': 'white'};
+    let wrapperStyle = {cursor: 'pointer', 'backgroundColor': 'white', float: 'right', position: 'relative'};
     let adsOverlay;
     let imgStyle = {
       width: this.props.width,
@@ -29,7 +29,7 @@ export default class AdsWrapper extends React.Component {
       imgStyle = Object.assign(imgStyle, {
           opacity: 0.3
       });
-      adsOverlay = <div className="adsOverlay">
+      adsOverlay = <div className="adsOverlay" style={{width: this.props.width}}>
         <div className="loader"/>
         Waiting for Internet
       </div>;

@@ -216,10 +216,10 @@ class App extends React.Component {
       <div className="main-content">
         <Grid>
           <Row>
-            <Col sm={3} md={2}>
+            <Col xs={4} sm={3} md={2}>
               <AdsWrapper imgUrl={require('../assets/images/160x600.png')} linkUrl="https://www.facebook.com/fuconnect/" internetUp={this.state.internetUp} width="160px" height="600px"/>
             </Col>
-            <Col sm={9} md={6}>
+            <Col xs={8} sm={9} md={6}>
               <CoreSystem onInternetUp={this.handleInternetUp}/>
             </Col>
             <Col xsHidden smHidden md={4}>
@@ -229,9 +229,11 @@ class App extends React.Component {
         </Grid>
       </div>
 
-      <div className="footer">
-        Copyright Connect Team (c) 2016
-      </div>
+      <footer className="footer">
+        <div className="container">
+          <span>Copyright Connect Team (c) 2016</span>
+        </div>
+      </footer>
     </div>
   }
 
